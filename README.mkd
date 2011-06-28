@@ -7,10 +7,12 @@ Installation
     # git clone git://github.com/motemen/git-log-relay-chat.git
     # cd git-log-relay-chat
 
+Then fork https://gist.github.com/1050889
+
 Configuration
 -------------
 
-    # perl make-config.pl > config.pl
+    # perl make-config.pl [your-forked-id] > config.pl
     # vi config.pl
 
 Usage
