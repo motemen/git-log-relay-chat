@@ -69,7 +69,6 @@ my $app = sub {
 
 sub git (@) {
     local $CWD = $git_root;
-    #open my $pipe, '-|', (git => @_);
     open (my $pipe, '-|') || exec (git => @_);
     return <$pipe>;
 }
