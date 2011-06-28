@@ -85,12 +85,12 @@ __DATA__
   <title>GRC</title>
 </head>
 <body>
-  <pre><?= $_{log} ?></pre>
   <form action="/" method="post">
     <input type="text" name="name" placeholder="name">
     <input type="text" name="message" placeholder="message" id="text">
     <input type="submit" value="enter">
   </form>
+  <pre><?= $_{log} ?></pre>
   <script type="text/javascript">
   document.getElementById('text').focus();
   </script>
