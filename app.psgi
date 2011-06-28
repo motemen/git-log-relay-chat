@@ -84,7 +84,7 @@ __DATA__
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GRC</title>
+  <title>Git Log Relay Chat</title>
 </head>
 <body>
   <form action="/" method="post">
