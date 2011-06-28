@@ -63,13 +63,14 @@ my $app = sub {
         return [ 302, [ Location => '/' ], [] ];
     } else {
         my $html = render_mt($Template, log => whole { git log => "--pretty=format:$log_format", '--no-merges' });
-        return [ 200, [ 'Content-Type' => 'text/html' ], [ $html ] ];
+        return [ 200, [ 'Content-Type' => 'text/html; charset=utf-8' ], [ $html ] ];
     }
 };
 
 sub git (@) {
     local $CWD = $git_root;
-    open my $pipe, '-|', (git => @_);
+    #open my $pipe, '-|', (git => @_);
+    open (my $pipe, '-|') || exec (git => @_);
     return <$pipe>;
 }
 
@@ -85,6 +86,7 @@ __DATA__
 <html>
 <head>
   <title>Git Log Relay Chat</title>
+  <meta charset="utf-8" />
 </head>
 <body>
   <form action="/" method="post">
