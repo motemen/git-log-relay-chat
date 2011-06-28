@@ -12,19 +12,21 @@ sub git (@);
 sub whole (&);
 
 my %defaults = (
-    hostname => hostname(),
-    git_root => 'db',
+    hostname    => hostname(),
+    git_root    => 'db',
     pull_remote => [ 'origin' ],
     push_remote => 'origin',
+    log_format  => '<%an> %s %ar',
 );
 
 my %config = ( %defaults, do 'config.pl' );
 
-my $hostname = $config{hostname};
-my $git_root = $config{git_root};
+my $hostname    = $config{hostname};
+my $git_root    = $config{git_root};
 my $pull_remote = $config{pull_remote};
 my $push_remote = $config{push_remote};
-$pull_remote = [ $pull_remote ] if ref $pull_remote ne 'ARRAY';
+   $pull_remote = [ $pull_remote ] if ref $pull_remote ne 'ARRAY';
+my $log_format  = $config{log_format};
 
 mkpath $git_root;
 git 'init';
@@ -60,7 +62,7 @@ my $app = sub {
         }
         return [ 302, [ Location => '/' ], [] ];
     } else {
-        my $html = render_mt($Template, log => whole { git log => '--pretty=format:%ar %an %s', '--no-merges' });
+        my $html = render_mt($Template, log => whole { git log => "--pretty=format:$log_format", '--no-merges' });
         return [ 200, [ 'Content-Type' => 'text/html' ], [ $html ] ];
     }
 };
