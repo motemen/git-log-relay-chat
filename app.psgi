@@ -1,0 +1,90 @@
+use strict;
+use warnings;
+use opts 0.05;
+use autodie;
+use Plack::Request;
+use File::Path qw(mkpath);
+use File::chdir;
+use Sys::Hostname;
+use Text::MicroTemplate qw(render_mt);
+
+sub git (@);
+sub whole (&);
+
+my %defaults = (
+    hostname => hostname(),
+    git_root => 'db',
+    pull_remote => [ 'origin' ],
+    push_remote => 'origin',
+);
+
+my %config = ( %defaults, do 'config.pl' );
+
+my $hostname = $config{hostname};
+my $git_root = $config{git_root};
+my $pull_remote = $config{pull_remote};
+my $push_remote = $config{push_remote};
+$pull_remote = [ $pull_remote ] if ref $pull_remote ne 'ARRAY';
+
+mkpath $git_root;
+git 'init';
+
+my $Template = whole { <DATA> };
+
+my $app = sub {
+    my $env = shift;
+    my $req = Plack::Request->new($env);
+
+    if ($req->path_info eq '/pull') {
+        foreach (@$pull_remote) {
+            git pull => $_, 'master';
+        }
+        return [ 302, [ Location => '/' ], [] ];
+    }
+
+    if ($req->path_info eq '/push') {
+        git push => $push_remote, 'master';
+        return [ 302, [ Location => '/' ], [] ];
+    }
+
+    if ($req->method eq 'POST') {
+        my $message = $req->param('message');
+        my $name    = $req->param('name');
+        if (length $message) {
+            git commit => '--allow-empty', '--message' => $message, length $name ? ( '--author' => "$name <$name\@$hostname>" ) : ();
+        }
+        return [ 302, [ Location => '/' ], [] ];
+    } else {
+        my $html = render_mt($Template, log => whole { git log => '--pretty=format:%ad %an %s' });
+        return [ 200, [ 'Content-Type' => 'text/html' ], [ $html ] ];
+    }
+};
+
+sub git (@) {
+    local $CWD = $git_root;
+    open my $pipe, '-|', (git => @_);
+    return <$pipe>;
+}
+
+sub whole (&) {
+    my $block = shift;
+    local $/;
+    return scalar $block->();
+}
+
+__DATA__
+? local %_ = @_;
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GRC</title>
+</head>
+<body>
+  <pre><?= $_{log} ?></pre>
+  <form action="/" method="post">
+    <input type="text" name="name" placeholder="name">
+    <input type="text" name="message" placeholder="message">
+    <input type="submit" value="enter">
+  </form>
+</body>
+</html>
