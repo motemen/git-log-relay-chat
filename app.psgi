@@ -60,7 +60,7 @@ my $app = sub {
         }
         return [ 302, [ Location => '/' ], [] ];
     } else {
-        my $html = render_mt($Template, log => whole { git log => '--pretty=format:%ad %an %s', '--no-merges' });
+        my $html = render_mt($Template, log => whole { git log => '--pretty=format:%ar %an %s', '--no-merges' });
         return [ 200, [ 'Content-Type' => 'text/html' ], [ $html ] ];
     }
 };
