@@ -86,7 +86,6 @@ __DATA__
 </head>
 <body>
   <form action="/" method="post">
-    <input type="text" name="name" placeholder="name">
     <input type="text" name="message" placeholder="message" id="text">
     <input type="submit" value="enter">
   </form>
