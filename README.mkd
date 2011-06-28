@@ -1,0 +1,20 @@
+Git Log Relay Chat
+==================
+
+Installation
+------------
+
+    # git clone git://github.com/motemen/git-log-relay-chat.git
+    # cd git-log-relay-chat
+
+Configuration
+-------------
+
+    # perl make-config.pl > config.pl
+    # vi config.pl
+
+Usage
+-----
+
+    # plackup
+
