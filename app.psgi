@@ -50,8 +50,8 @@ my $app = sub {
     }
 
     if ($req->method eq 'POST') {
-        my $message = $req->param('message');
-        my $name    = $req->param('name');
+        my $message = $req->param('message') || '';
+        my $name    = $req->param('name') || '';
         if (length $message) {
             git commit => '--allow-empty', '--message' => $message, length $name ? ( '--author' => "$name <$name\@$hostname>" ) : ();
             git push => $push_remote, 'master';
