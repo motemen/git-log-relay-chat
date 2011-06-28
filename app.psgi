@@ -19,7 +19,7 @@ my %defaults = (
     log_format  => '<%an> %s %ar',
 );
 
-my %config = ( %defaults, do 'config.pl' );
+my %config = ( %defaults, %{ do 'config.pl' } );
 
 my $hostname    = $config{hostname};
 my $git_root    = $config{git_root};

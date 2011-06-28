@@ -19,4 +19,5 @@ for my $item ( @{ $res->{forks} } ) {
 use Data::Dumper;
 $Data::Dumper::Terse  = 1;
 $Data::Dumper::Indent = 1;
-print Dumper( [%config] );
+$Data::Dumper::Sortkeys = 1;
+print Dumper \%config;
