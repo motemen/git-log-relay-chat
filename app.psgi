@@ -52,6 +52,11 @@ my $app = sub {
         my $name    = $req->param('name');
         if (length $message) {
             git commit => '--allow-empty', '--message' => $message, length $name ? ( '--author' => "$name <$name\@$hostname>" ) : ();
+            git push => $push_remote, 'master';
+        } else {
+            foreach (@$pull_remote) {
+                git pull => $_, 'master';
+            }
         }
         return [ 302, [ Location => '/' ], [] ];
     } else {
@@ -83,8 +88,11 @@ __DATA__
   <pre><?= $_{log} ?></pre>
   <form action="/" method="post">
     <input type="text" name="name" placeholder="name">
-    <input type="text" name="message" placeholder="message">
+    <input type="text" name="message" placeholder="message" id="text">
     <input type="submit" value="enter">
   </form>
+  <script type="text/javascript">
+  document.getElementById('text').focus();
+  </script>
 </body>
 </html>
