@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use opts 0.05;
 use autodie;
 use Plack::Request;
 use File::Path qw(mkpath);
