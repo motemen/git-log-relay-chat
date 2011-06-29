@@ -18,7 +18,8 @@ my %defaults = (
     log_format  => '<%an> %s %ar',
 );
 
-my %config = ( %defaults, %{ do 'config.pl' } );
+my @c = do 'config.pl';
+my %config = ( %defaults, ref $c[0] eq 'HASH' ? %{ $c[0] } : @c );
 
 my $hostname    = $config{hostname};
 my $git_root    = $config{git_root};
